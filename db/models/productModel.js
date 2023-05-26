@@ -1,32 +1,43 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('./sequelize'); // Configura la conexión a la base de datos en sequelize.js
+const { Model, DataTypes, Sequelize} = require('sequelize');
 
 const PRODUCT_TABLE = 'products';
 
-class Product extends Model {}
-
-Product.init({
-  id_producto: {
+const ProductSchema = {
+  id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  nombre: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  descripcion: {
+  description: {
     type: DataTypes.STRING
   },
-  precio: {
-    type: DataTypes.FLOAT,
+  price: {
+    type: DataTypes.INTEGER,
     allowNull: false
   }
-}, {
-  sequelize,
-  tableName: PRODUCT_TABLE,
-  modelName: 'Product',
-  timestamps: false
-});
+}
 
-module.exports = Product;
+
+class Product extends Model {
+
+  static associate(models) {
+
+  }
+
+  static config(sequelize) {
+    return {
+      sequelize,
+      tableName: PRODUCT_TABLE,
+      modelName: 'Product',
+      timestamps: false
+    }
+  }
+}
+
+
+
+module.exports = { PRODUCT_TABLE, ProductSchema, Product}
