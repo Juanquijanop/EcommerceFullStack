@@ -1,38 +1,52 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('./sequelize'); // Configura la conexión a la base de datos en sequelize.js
-const Product = require('./product'); // Importa la entidad de Productos
+const { Model, DataTypes, Sequelize} = require('sequelize');
+const {PRODUCT_TABLE} = require('./productModel')
 
 const STOCK_TABLE = 'stock';
 
-class Stock extends Model {}
-
-Stock.init({
-  id_stock: {
+const StockSchema = {
+  id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  cantidad: {
+  quantity: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  id_producto: {
+  id_product: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: Product,
-      key: 'id_producto'
+      model: PRODUCT_TABLE,
+      key: 'id'
     },
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE'
   }
-}, {
-  sequelize,
-  tableName: STOCK_TABLE,
-  modelName: 'Stock',
-  timestamps: false
-});
+}
 
-Stock.belongsTo(Product, { foreignKey: 'id_producto' });
 
-module.exports = Stock;
+class Stock extends Model {
+
+
+  static associate(models) {
+    this.belongsTo(models.Product, {
+      as: 'product',
+      foreignKey: 'id_product'
+    });
+  }
+
+    static config(sequelize) {
+      return {
+        sequelize,
+        tableName: STOCK_TABLE,
+        modelName: 'Stock',
+        timestamps: false
+      }
+    }
+  }
+
+
+
+
+module.exports = { STOCK_TABLE, StockSchema, Stock}
