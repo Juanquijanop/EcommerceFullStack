@@ -19,7 +19,7 @@ class ProductService {
     if(!product){
       throw Error('No se encontro el producto')
     }
-    return user;
+    return product;
   }
 
   async update(id, changes) {
